@@ -18,7 +18,6 @@ def teste():
 @app.route('/api', methods=['POST'])
 def predict():
     data = request.get_json()
-    raw, X, y = get_data()
     df = pd.DataFrame([data])
     df = df.T
 
@@ -35,7 +34,7 @@ def predict():
     # }
 
     return df.to_dict(), 200
-    return jsonify(response), 200
+    # return jsonify(response), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

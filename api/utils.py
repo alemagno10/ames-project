@@ -9,21 +9,20 @@ from sklearn.preprocessing import OneHotEncoder
 def get_data():
     DATA_DIR = pathlib.Path.cwd().parent / 'data'
     clean_data_path = DATA_DIR / 'processed' / 'ames_clean.pkl'
-    print(DATA_DIR)
+    feature_eng_data_path = DATA_DIR / 'processed' / 'feature_engineering.pkl'
 
-    data = pd.read_pickle(clean_data_path)
+    data = pd.read_pickle(feature_eng_data_path)
     X = data.drop(["SalePrice"], axis=1)
     y = data["SalePrice"]
 
-    return X, feature_engineering(X), y
+    clean = pd.read_pickle(clean_data_path)
+    clean = clean.drop(["SalePrice"], axis=1)
+    return clean, X, y
 
 def get_model():
     return LinearRegression()
 
 def check_fields(json, fields):
-    # if len(json.c) != len(fields):
-    #     return False
-
     for field in json:
         if field not in fields:
             return False
