@@ -5,9 +5,7 @@ scikit-learn
 seaborn
 matplotlib
 requests
-xgboost
-tqdm
-catboost
 statsmodels
 hyperopt
 flask
+tabulate
