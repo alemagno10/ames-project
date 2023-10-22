@@ -11,3 +11,5 @@ catboost
 statsmodels
 hyperopt
 flask
+jinja2
+tabulate
