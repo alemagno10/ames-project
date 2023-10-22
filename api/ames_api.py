@@ -13,7 +13,7 @@ def hello_world():
     return 'Hello, World!'
 
 @app.route('/api', methods=['GET'])
-def teste():
+def random_data():
     i = random.randint(0,2877)
     return raw.iloc[i].to_dict(), 200
 
@@ -29,7 +29,7 @@ def predict():
 
     response = {
         'message': 'Regressão concluída com sucesso',
-        'predicted_y': predicted_y.tolist()
+        'predicted_y': predicted_y
     }
 
     return jsonify(response), 200
