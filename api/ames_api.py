@@ -19,21 +19,19 @@ def teste():
 def predict():
     data = request.get_json()
     df = pd.DataFrame([data])
-    df = df.T
 
-    # if not check_fields(data, list(X.columns)):
-    #     return data, 200
-        # return jsonify({'error: Verifique os campos enviados'}), 400
+    if not check_fields(data, list(raw.columns)):
+        return jsonify({'error: Verifique os campos enviados'}), 400
     
-    # predicted_y = model.predict(feature_engineering(df.iloc[0]))
-    # print(predicted_y)
+    predicted_y = model.predict(feature_engineering(df.iloc[0]))
+    print(predicted_y)
 
-    # response = {
-    #     'message': 'Regressão concluída com sucesso',
-    #     'predicted_y': predicted_y.tolist()
-    # }
+    response = {
+        'message': 'Regressão concluída com sucesso',
+        'predicted_y': predicted_y.tolist()
+    }
 
-    return df.to_dict(), 200
+    return df.T.to_dict(), 200
     # return jsonify(response), 200
 
 if __name__ == '__main__':
