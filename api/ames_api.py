@@ -12,17 +12,12 @@ model.fit(X, y)
 def hello_world():
     return 'Hello, World!'
 
-@app.route('/api', methods=['GET'])
-def random_data():
-    i = random.randint(0,2877)
-    return raw.iloc[i].to_dict(), 200
-
 @app.route('/api', methods=['POST'])
 def predict():
     data = request.get_json()
     df = pd.DataFrame([data])
 
-    if not check_fields(data.keys(), list(raw.columns)):
+    if not check_fields(list(data.keys()), list(raw.columns)):
         return jsonify({'error: Verifique os campos enviados'}), 400
     
     predicted_y = model.predict(feature_engineering(df))

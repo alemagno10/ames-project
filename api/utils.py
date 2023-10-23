@@ -1,26 +1,24 @@
 import pathlib
 import pandas as pd
 
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Ridge
 from sklearn.preprocessing import OrdinalEncoder
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder
 
 def get_data():
     DATA_DIR = pathlib.Path.cwd().parent / 'data'
     clean_data_path = DATA_DIR / 'processed' / 'ames_clean.pkl'
-    feature_eng_data_path = DATA_DIR / 'processed' / 'feature_engineering.pkl'
 
-    data = pd.read_pickle(feature_eng_data_path)
+    data = pd.read_pickle(clean_data_path)
+    raw = data.copy()
+    raw = data.drop(["SalePrice"], axis=1)
+    data = feature_engineering(data)
+
     X = data.drop(["SalePrice"], axis=1)
     y = data["SalePrice"]
-
-    clean = pd.read_pickle(clean_data_path)
-    clean = clean.drop(["SalePrice"], axis=1)
-    return clean, X, y
+    return raw, X, y
 
 def get_model():
-    return LinearRegression()
+    return Ridge(alpha=10)
 
 def check_fields(json, fields):
     for field in json:
@@ -41,21 +39,8 @@ def feature_engineering(data):
     data[ordinal_columns] = ordinal_encoder.fit_transform(data[ordinal_columns])
     data[categorical_columns] = data[categorical_columns].astype(str)
 
-    preprocessor = ColumnTransformer(
-        transformers=[
-            ('onehot', OneHotEncoder(drop='first'), categorical_columns),
-        ],
-        remainder='passthrough',
-    )
+    data = pd.get_dummies(data, columns=categorical_columns, drop_first=True, prefix=categorical_columns)
 
-    preprocessor.fit(data)
-    array_transformed = preprocessor.transform(data)
-
-    new_categorical_columns = preprocessor.named_transformers_['onehot'].get_feature_names_out()
-    new_columns = new_categorical_columns.tolist() + [col for col in data.columns if col not in categorical_columns]
-
-    data = pd.DataFrame(array_transformed, columns=new_columns)
-    
     data["SqFtPerRoom"] = data["Gr.Liv.Area"] / (data["TotRms.AbvGrd"] +
                                                 data["Full.Bath"] +
                                                 data["Half.Bath"] +
