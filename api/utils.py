@@ -1,7 +1,7 @@
 import pathlib
 import pandas as pd
 
-from sklearn.linear_model import Ridge
+from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import OrdinalEncoder
 
 def get_data():
@@ -18,7 +18,7 @@ def get_data():
     return raw, X, y
 
 def get_model():
-    return Ridge(alpha=10)
+    return LinearRegression()
 
 def check_fields(json, fields):
     for field in json:
